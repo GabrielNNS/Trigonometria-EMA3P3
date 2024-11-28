@@ -1,41 +1,52 @@
 import math
-import matplotlib.pyplot as plt
 
 def menu():
     print("\n## Menu de Opções ## ")
     print("1. Calcular Seno (sin)")
     print("2. Calcular Cosseno (cos)")
     print("3. Calcular Tangente (tan)")
+    print("4. Calcular Tudo Sen, Cos e Tan")
     print("0. Sair")
     print("----------------------------------")
 
-'''def desenhar_triangulo(cateto1, cateto2):
-    # Calcula a hipotenusa
-    hipotenusa = (cateto1**2 + cateto2**2)**0.5
+def fatorial(n):
+    """Calcula o fatorial de um número."""
+    resultado = 1
+    for i in range(2, n + 1):
+        resultado *= i
+    return resultado
 
-    # Coordenadas do triângulo
-    x = [0, cateto1, 0, 0]  # Posição dos vértices no eixo x
-    y = [0, 0, cateto2, 0]  # Posição dos vértices no eixo y
+def seno(x, termos=10):
+    """Calcula o seno usando a série de Taylor."""
+    x_rad = x * (3.141592653589793 / 180)  # Converte graus para radianos
+    resultado = 0
+    for n in range(termos):
+        termo = ((-1) ** n) * (x_rad ** (2 * n + 1)) / fatorial(2 * n + 1)
+        resultado += termo
+    return resultado
 
-    # Criar o gráfico
-    plt.figure(figsize=(6, 6))
-    plt.plot(x, y, 'b-', label='Triângulo Retângulo')  # Linhas do triângulo
-    plt.fill(x, y, 'skyblue', alpha=0.3)  # Preenchimento do triângulo
-    plt.scatter(x, y, color='red')  # Marca os vértices
-    plt.text(cateto1 / 2, -0.5, f'Cateto1 = {cateto1}', ha='center')
-    plt.text(-0.5, cateto2 / 2, f'Cateto2 = {cateto2}', va='center', rotation=90)
-    plt.text(cateto1 / 2, cateto2 / 2, f'Hipotenusa = {hipotenusa:.2f}', color='green', ha='center')
+def cosseno(x, termos=10):
+    """Calcula o cosseno usando a série de Taylor."""
+    x_rad = x * (3.141592653589793 / 180)  # Converte graus para radianos
+    resultado = 0
+    for n in range(termos):
+        termo = ((-1) ** n) * (x_rad ** (2 * n)) / fatorial(2 * n)
+        resultado += termo
+    return resultado
 
-    # Configurações do gráfico
-    plt.title('Visualização do Triângulo Retângulo')
-    plt.axhline(0, color='black', linewidth=0.5)
-    plt.axvline(0, color='black', linewidth=0.5)
-    plt.grid(color='gray', linestyle='--', linewidth=0.5)
-    plt.xlim(-1, max(cateto1, cateto2) + 1)
-    plt.ylim(-1, max(cateto1, cateto2) + 1)
-    plt.gca().set_aspect('equal', adjustable='box')
-    plt.legend()
-    plt.show() '''
+def tangente(x, termos=10):
+    """Calcula a tangente como seno/cosseno."""
+    sen = seno(x, termos)
+    cos = cosseno(x, termos)
+    if cos == 0:
+        return "Infinito (divisão por zero)"  # Evita divisão por zero
+    return sen / cos
+
+'''def calcular_angulos(cateto1, cateto2, hipotenusa):     ## ARRUMAAAAAAAAAAAAAAAAAAAAAAAR
+    """Calcula os ângulos de um triângulo retângulo."""
+    angulo_a = (cateto2 / hipotenusa) * 90  # Usando razão de proporcionalidade
+    angulo_b = (cateto1 / hipotenusa) * 90 
+    return angulo_a, angulo_b'''
 
 def calcular_angulos(cateto1, cateto2, hipotenusa):
     # Calcula os ângulos
@@ -48,19 +59,42 @@ def executar(opcao, cateto1, cateto2, hipotenusa):
     angulo_a, angulo_b = calcular_angulos(cateto1, cateto2, hipotenusa)
 
     if opcao == 1:
-        print("## SENO ## -> cateto oposto / hipotenusa")
-        print(f"Seno do ângulo A: {math.sin(math.radians(angulo_a)):.2f}")
-        print(f"Seno do ângulo B: {math.sin(math.radians(angulo_b)):.2f}")
+        print(f"## SENO ## -> cateto oposto / hipotenusa\n"
+                f"(PROVA REAL) Seno do ângulo A: {math.sin(math.radians(angulo_a)):.2f}\n"  ## TIRAR PROVA REAL
+                f"(PROVA REAL) Seno do ângulo B: {math.sin(math.radians(angulo_b)):.2f}\n"  ## TIRAR PROVA REAL
+                f"Seno do ângulo A: {seno(angulo_a):.2f}\n"
+                f"Seno do ângulo B: {seno(angulo_b):.2f}")
+        
     elif opcao == 2:
-        print("## COSSENO ## -> cateto adjacente / hipotenusa")
-        print(f"Cosseno do ângulo A: {math.cos(math.radians(angulo_a)):.2f}")
-        print(f"Cosseno do ângulo B: {math.cos(math.radians(angulo_b)):.2f}")
+        print("## COSSENO ## -> cateto adjacente / hipotenusa\n"
+                f"(PROVA REAL) Cosseno do ângulo A: {math.cos(math.radians(angulo_a)):.2f}\n"  ## TIRAR PROVA REAL
+                f"(PROVA REAL) Cosseno do ângulo B: {math.cos(math.radians(angulo_b)):.2f}\n"  ## TIRAR PROVA REAL
+                f"Cosseno do ângulo A: {cosseno(angulo_a):.2f}\n"
+                f"Cosseno do ângulo B: {cosseno(angulo_b):.2f}")
+        
     elif opcao == 3:
-        print("## TANGENTE ## -> cateto oposto / cateto adjacente")
-        print(f"Tangente do ângulo A: {math.tan(math.radians(angulo_a)):.2f}")
-        print(f"Tangente do ângulo B: {math.tan(math.radians(angulo_b)):.2f}")
+        print("## TANGENTE ## -> cateto oposto / cateto adjacente\n"
+                f"(PROVA REAL) Tangente do ângulo B: {math.tan(math.radians(angulo_b)):.2f}\n"  ## TIRAR PROVA REAL
+                f"(PROVA REAL) Tangente do ângulo A: {math.tan(math.radians(angulo_a)):.2f}\n"  ## TIRAR PROVA REAL
+                f"Tangente do ângulo A: {tangente(angulo_a):.2f}\n"
+                f"Tangente do ângulo B: {tangente(angulo_b):.2f}")
+        
+    elif opcao == 4:
+        print("## SENO ## -> cateto oposto / hipotenusa\n"
+                "## COSSENO ## -> cateto adjacente / hipotenusa\n"
+                "## TANGENTE ## -> cateto oposto / cateto adjacente\n\n"
+                "Ângulo A\n"
+                f"Seno do ângulo A: {seno(angulo_a):.2f}\n"
+                f"Cosseno do ângulo A: {cosseno(angulo_a):.2f}\n"
+                f"Tangente do ângulo A: {tangente(angulo_a):.2f}\n\n"
+                "Ângulo B\n"
+                f"Seno do ângulo B: {seno(angulo_b):.2f}\n"
+                f"Cosseno do ângulo B: {cosseno(angulo_b):.2f}\n"
+                f"Tangente do ângulo B: {tangente(angulo_b):.2f}")
+        
     elif opcao == 0:
-        print("Saindo do programa...")
+        print("\nSaindo do programa...")
+        
     else:
         print("Opção inválida. Por favor, tente novamente.")
 
@@ -77,7 +111,7 @@ def main():
         try:
             opcao = int(input("\nEscolha uma opção: "))
             if opcao == 0 or cateto1 <= 0 or cateto2 <= 0:
-                executar(opcao)
+                executar(opcao, cateto1, cateto2, hipotenusa)
                 break
             executar(opcao, cateto1, cateto2, hipotenusa)
         except ValueError:
