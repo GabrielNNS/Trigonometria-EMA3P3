@@ -1,6 +1,7 @@
-import math
+PI = 3.141592653589793
 
 def menu():
+    print("----------------------------------")
     print("\n## Menu de Opções ## ")
     print("1. Calcular Seno (sin)")
     print("2. Calcular Cosseno (cos)")
@@ -16,9 +17,14 @@ def fatorial(n):
         resultado *= i
     return resultado
 
+def graus_para_radianos(graus):
+    """Converte graus para radianos."""
+    pi = 3.141592653589793
+    return graus * (pi / 180)
+
 def seno(x, termos=10):
     """Calcula o seno usando a série de Taylor."""
-    x_rad = x * (3.141592653589793 / 180)  # Converte graus para radianos
+    x_rad = graus_para_radianos(x)
     resultado = 0
     for n in range(termos):
         termo = ((-1) ** n) * (x_rad ** (2 * n + 1)) / fatorial(2 * n + 1)
@@ -27,7 +33,7 @@ def seno(x, termos=10):
 
 def cosseno(x, termos=10):
     """Calcula o cosseno usando a série de Taylor."""
-    x_rad = x * (3.141592653589793 / 180)  # Converte graus para radianos
+    x_rad = graus_para_radianos(x)
     resultado = 0
     for n in range(termos):
         termo = ((-1) ** n) * (x_rad ** (2 * n)) / fatorial(2 * n)
@@ -39,43 +45,56 @@ def tangente(x, termos=10):
     sen = seno(x, termos)
     cos = cosseno(x, termos)
     if cos == 0:
-        return "Infinito (divisão por zero)"  # Evita divisão por zero
+        return "Infinito (divisão por zero)"
     return sen / cos
 
-'''def calcular_angulos(cateto1, cateto2, hipotenusa):     ## ARRUMAAAAAAAAAAAAAAAAAAAAAAAR
-    """Calcula os ângulos de um triângulo retângulo."""
-    angulo_a = (cateto2 / hipotenusa) * 90  # Usando razão de proporcionalidade
-    angulo_b = (cateto1 / hipotenusa) * 90 
-    return angulo_a, angulo_b'''
-
 def calcular_angulos(cateto1, cateto2, hipotenusa):
-    # Calcula os ângulos
-    angulo_a = math.degrees(math.asin(cateto2 / hipotenusa))  # Ângulo oposto a cateto2
-    angulo_b = math.degrees(math.asin(cateto1 / hipotenusa))  # Ângulo oposto a cateto1
+    """Calcula os ângulos do triângulo retângulo usando arcsin."""
+    def calcular_arcsin(x, termos=20):
+        """Calcula arcsin(x) usando a série de Taylor."""
+        resultado = x
+        termo = x
+        for n in range(1, termos):
+            termo *= (x * x * (2 * n - 1)) / (2 * n)
+            resultado += termo / (2 * n + 1)
+        return resultado
 
-    return angulo_a, angulo_b
+    if cateto1 > cateto2:
+        cateto_oposto_maior = cateto1
+        cateto_oposto_menor = cateto2
+    else:
+        cateto_oposto_maior = cateto2
+        cateto_oposto_menor = cateto1
+
+    # Calcula os senos dos ângulos
+    seno_a = cateto_oposto_maior / hipotenusa
+    seno_b = cateto_oposto_menor / hipotenusa
+
+    # Calcula os ângulos em radianos
+    angulo_a_rad = calcular_arcsin(seno_a)
+    angulo_b_rad = calcular_arcsin(seno_b)
+
+    # Converte para graus
+    angulo_a_graus = angulo_a_rad * (180 / PI)
+    angulo_b_graus = angulo_b_rad * (180 / PI)
+
+    return angulo_a_graus, angulo_b_graus
 
 def executar(opcao, cateto1, cateto2, hipotenusa):
     angulo_a, angulo_b = calcular_angulos(cateto1, cateto2, hipotenusa)
 
     if opcao == 1:
         print(f"## SENO ## -> cateto oposto / hipotenusa\n"
-                f"(PROVA REAL) Seno do ângulo A: {math.sin(math.radians(angulo_a)):.2f}\n"  ## TIRAR PROVA REAL
-                f"(PROVA REAL) Seno do ângulo B: {math.sin(math.radians(angulo_b)):.2f}\n"  ## TIRAR PROVA REAL
                 f"Seno do ângulo A: {seno(angulo_a):.2f}\n"
                 f"Seno do ângulo B: {seno(angulo_b):.2f}")
         
     elif opcao == 2:
         print("## COSSENO ## -> cateto adjacente / hipotenusa\n"
-                f"(PROVA REAL) Cosseno do ângulo A: {math.cos(math.radians(angulo_a)):.2f}\n"  ## TIRAR PROVA REAL
-                f"(PROVA REAL) Cosseno do ângulo B: {math.cos(math.radians(angulo_b)):.2f}\n"  ## TIRAR PROVA REAL
                 f"Cosseno do ângulo A: {cosseno(angulo_a):.2f}\n"
                 f"Cosseno do ângulo B: {cosseno(angulo_b):.2f}")
         
     elif opcao == 3:
         print("## TANGENTE ## -> cateto oposto / cateto adjacente\n"
-                f"(PROVA REAL) Tangente do ângulo B: {math.tan(math.radians(angulo_b)):.2f}\n"  ## TIRAR PROVA REAL
-                f"(PROVA REAL) Tangente do ângulo A: {math.tan(math.radians(angulo_a)):.2f}\n"  ## TIRAR PROVA REAL
                 f"Tangente do ângulo A: {tangente(angulo_a):.2f}\n"
                 f"Tangente do ângulo B: {tangente(angulo_b):.2f}")
         
@@ -104,7 +123,10 @@ def main():
     cateto2 = float(input("Digite o comprimento do segundo cateto: "))
     hipotenusa = (cateto1**2 + cateto2**2)**0.5
 
-    print(f"C1 = {cateto1} # C2 = {cateto2} # Hi = {hipotenusa} # AA e AB = {calcular_angulos(cateto1, cateto2, hipotenusa)}")
+    print(f"\nCateto A = {cateto1}\n" 
+          f"Cateto B = {cateto2} \n" 
+          f"Hipotenusa = {hipotenusa} \n" 
+          f"Angulos A e B = {calcular_angulos(cateto1, cateto2, hipotenusa)}")
 
     while True:
         menu()
