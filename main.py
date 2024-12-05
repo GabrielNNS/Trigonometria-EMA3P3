@@ -19,8 +19,7 @@ def fatorial(n):
 
 def graus_para_radianos(graus):
     """Converte graus para radianos."""
-    pi = 3.141592653589793
-    return graus * (pi / 180)
+    return graus * (PI / 180)
 
 def seno(x, termos=10):
     """Calcula o seno usando a série de Taylor."""
@@ -59,16 +58,9 @@ def calcular_angulos(cateto1, cateto2, hipotenusa):
             resultado += termo / (2 * n + 1)
         return resultado
 
-    if cateto1 > cateto2:
-        cateto_oposto_maior = cateto1
-        cateto_oposto_menor = cateto2
-    else:
-        cateto_oposto_maior = cateto2
-        cateto_oposto_menor = cateto1
-
     # Calcula os senos dos ângulos
-    seno_a = cateto_oposto_maior / hipotenusa
-    seno_b = cateto_oposto_menor / hipotenusa
+    seno_a = cateto1 / hipotenusa
+    seno_b = cateto2 / hipotenusa
 
     # Calcula os ângulos em radianos
     angulo_a_rad = calcular_arcsin(seno_a)
@@ -102,11 +94,11 @@ def executar(opcao, cateto1, cateto2, hipotenusa):
         print("## SENO ## -> cateto oposto / hipotenusa\n"
                 "## COSSENO ## -> cateto adjacente / hipotenusa\n"
                 "## TANGENTE ## -> cateto oposto / cateto adjacente\n\n"
-                "Ângulo A\n"
+                f"Ângulo A - {angulo_a:.2f}\n"
                 f"Seno do ângulo A: {seno(angulo_a):.2f}\n"
                 f"Cosseno do ângulo A: {cosseno(angulo_a):.2f}\n"
                 f"Tangente do ângulo A: {tangente(angulo_a):.2f}\n\n"
-                "Ângulo B\n"
+                f"Ângulo B - {angulo_b:.2f}\n"
                 f"Seno do ângulo B: {seno(angulo_b):.2f}\n"
                 f"Cosseno do ângulo B: {cosseno(angulo_b):.2f}\n"
                 f"Tangente do ângulo B: {tangente(angulo_b):.2f}")
@@ -123,19 +115,29 @@ def main():
     cateto2 = float(input("Digite o comprimento do segundo cateto: "))
     hipotenusa = (cateto1**2 + cateto2**2)**0.5
 
-    print(f"\nCateto A = {cateto1}\n" 
-          f"Cateto B = {cateto2} \n" 
-          f"Hipotenusa = {hipotenusa} \n" 
-          f"Angulos A e B = {calcular_angulos(cateto1, cateto2, hipotenusa)}")
+    if cateto1 > cateto2:
+        cateto_oposto_maior = cateto1
+        cateto_oposto_menor = cateto2
+    else:
+        cateto_oposto_maior = cateto2
+        cateto_oposto_menor = cateto1
+
+    angulo_a, angulo_b = calcular_angulos(cateto_oposto_maior, cateto_oposto_menor, hipotenusa)
+
+    print(f"\nCateto A = {cateto_oposto_maior}\n" 
+          f"Cateto B = {cateto_oposto_menor} \n" 
+          f"Hipotenusa = {hipotenusa:.2f} \n" 
+          f"Ângulo A = {angulo_a:.2f} \n"
+          f"Ângulo B = {angulo_b:.2f}")
 
     while True:
         menu()
         try:
             opcao = int(input("\nEscolha uma opção: "))
-            if opcao == 0 or cateto1 <= 0 or cateto2 <= 0:
-                executar(opcao, cateto1, cateto2, hipotenusa)
+            if opcao == 0 or cateto_oposto_maior <= 0 or cateto_oposto_menor <= 0:
+                executar(opcao, cateto_oposto_maior, cateto_oposto_menor, hipotenusa)
                 break
-            executar(opcao, cateto1, cateto2, hipotenusa)
+            executar(opcao, cateto_oposto_maior, cateto_oposto_menor, hipotenusa)
         except ValueError:
             print("Entrada inválida. Por favor, insira um número.")
 
