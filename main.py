@@ -11,18 +11,15 @@ def menu():
     print("----------------------------------")
 
 def fatorial(n):
-    """Calcula o fatorial de um número."""
     resultado = 1
     for i in range(2, n + 1):
         resultado *= i
     return resultado
 
 def graus_para_radianos(graus):
-    """Converte graus para radianos."""
     return graus * (PI / 180)
 
 def seno(x, termos=10):
-    """Calcula o seno usando a série de Taylor."""
     x_rad = graus_para_radianos(x)
     resultado = 0
     for n in range(termos):
@@ -31,7 +28,6 @@ def seno(x, termos=10):
     return resultado
 
 def cosseno(x, termos=10):
-    """Calcula o cosseno usando a série de Taylor."""
     x_rad = graus_para_radianos(x)
     resultado = 0
     for n in range(termos):
@@ -40,17 +36,13 @@ def cosseno(x, termos=10):
     return resultado
 
 def tangente(x, termos=10):
-    """Calcula a tangente como seno/cosseno."""
     sen = seno(x, termos)
     cos = cosseno(x, termos)
-    if cos == 0:
-        return "Infinito (divisão por zero)"
+    
     return sen / cos
 
 def calcular_angulos(cateto1, cateto2, hipotenusa):
-    """Calcula os ângulos do triângulo retângulo usando arcsin."""
     def calcular_arcsin(x, termos=20):
-        """Calcula arcsin(x) usando a série de Taylor."""
         resultado = x
         termo = x
         for n in range(1, termos):
@@ -58,15 +50,12 @@ def calcular_angulos(cateto1, cateto2, hipotenusa):
             resultado += termo / (2 * n + 1)
         return resultado
 
-    # Calcula os senos dos ângulos
     seno_a = cateto1 / hipotenusa
     seno_b = cateto2 / hipotenusa
 
-    # Calcula os ângulos em radianos
     angulo_a_rad = calcular_arcsin(seno_a)
     angulo_b_rad = calcular_arcsin(seno_b)
 
-    # Converte para graus
     angulo_a_graus = angulo_a_rad * (180 / PI)
     angulo_b_graus = angulo_b_rad * (180 / PI)
 
